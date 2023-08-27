@@ -7,9 +7,7 @@ class Solution {
             return false;
         
         int n = stones.length;
-        
         dp = new boolean[n][n];
-        
         return helper(stones,0,1);
     }
     
