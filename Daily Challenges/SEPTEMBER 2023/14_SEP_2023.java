@@ -1,52 +1,43 @@
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
 class Solution {
-    public ListNode reverseBetween(ListNode head, int m, int n) {
 
-        // Empty list
-        if (head == null) {
-            return null;
+    private void dfs(String s, Map<String, PriorityQueue<String>> map, LinkedList<String> list){
+
+        PriorityQueue<String> pq = map.get(s);
+
+        while(pq!=null && !pq.isEmpty()){
+
+            dfs(pq.poll(), map, list);
+
         }
 
-        // Move the two pointers until they reach the proper starting point
-        // in the list.
-        ListNode cur = head, prev = null;
-        while (m > 1) {
-            prev = cur;
-            cur = cur.next;
-            m--;
-            n--;
-        }
+        list.addFirst(s);
 
-        // The two pointers that will fix the final connections.
-        ListNode con = prev, tail = cur;
-
-        // Iteratively reverse the nodes until n becomes 0.
-        ListNode third = null;
-        while (n > 0) {
-            third = cur.next;
-            cur.next = prev;
-            prev = cur;
-            cur = third;
-            n--;
-        }
-
-        // Adjust the final connections as explained in the algorithm
-        if (con != null) {
-            con.next = prev;
-        } else {
-            head = prev;
-        }
-
-        tail.next = cur;
-        return head;
     }
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+
+        HashMap<String, PriorityQueue<String>> map = new HashMap<>();
+
+        for(int i=0; i<tickets.size(); i++){
+
+            if(!map.containsKey(tickets.get(i).get(0))){
+
+                PriorityQueue<String> pq = new PriorityQueue<>();
+
+                map.put(tickets.get(i).get(0), pq);
+
+            }
+
+            map.get(tickets.get(i).get(0)).add(tickets.get(i).get(1));
+
+        } 
+
+        LinkedList<String> list = new LinkedList<>();
+
+        dfs("JFK", map, list);
+
+        return list;
+
+    }
+
 }
